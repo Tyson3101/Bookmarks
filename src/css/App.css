@@ -54,11 +54,6 @@ body {
   flex-flow: wrap;
 }
 
-.linka {
-  text-decoration: none;
-  color: initial;
-}
-
 .link {
   font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
     "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
@@ -69,6 +64,12 @@ body {
   cursor: pointer;
   position: relative;
   max-width: 2.4em;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .link span {
