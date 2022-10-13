@@ -7,8 +7,6 @@ import Loading from "./components/static/Loading";
 import Login from "./components/static/Login";
 import NavBar from "./components/static/NavBar";
 
-//https://manage.auth0.com/dashboard/us/dev-jmaenfuw/applications/QopskNe2tUV2pxtzeF1MDyZJEWkxWGlS
-
 ReactDOM.render(
   <>
     <NavBar />
