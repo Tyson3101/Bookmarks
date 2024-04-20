@@ -4,7 +4,6 @@ import NavBar from "./components/static/NavBar";
 import fetch from "cross-fetch";
 import Loading from "./components/static/Loading";
 import AddLink from "./components/AddLink";
-import { setInterval } from "timers";
 import EditLink from "./components/EditLink";
 
 function App({ auth0, user }: { auth0: Auth0Client; user: User }) {

@@ -2,12 +2,14 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
 import "./css/App.css";
-import createAuth0Client, { Auth0Client } from "@auth0/auth0-spa-js";
+import {
+  Auth0Client,
+  createAuth0Client,
+  Auth0ClientOptions,
+} from "@auth0/auth0-spa-js";
 import Loading from "./components/static/Loading";
 import Login from "./components/static/Login";
 import NavBar from "./components/static/NavBar";
-
-//https://manage.auth0.com/dashboard/us/dev-jmaenfuw/applications/QopskNe2tUV2pxtzeF1MDyZJEWkxWGlS
 
 ReactDOM.render(
   <>
@@ -17,9 +19,10 @@ ReactDOM.render(
   document.getElementById("root")
 );
 
-const auth0Options = {
+const auth0Options: Auth0ClientOptions = {
   domain: process.env.REACT_APP_DOMAIN!,
-  client_id: process.env.REACT_APP_CLIENT_ID!,
+  clientId: process.env.REACT_APP_CLIENT_ID!,
+  // @ts-ignore
   redirect_uri: window.location.origin,
 };
 
