@@ -1,58 +1,24 @@
 import React from "react";
-import ReactDOM from "react-dom";
-import App from "./App";
+import { Auth0Provider } from "@auth0/auth0-react";
 import "./css/App.css";
-import {
-  Auth0Client,
-  createAuth0Client,
-  Auth0ClientOptions,
-} from "@auth0/auth0-spa-js";
-import Loading from "./components/static/Loading";
-import Login from "./components/static/Login";
+
 import NavBar from "./components/static/NavBar";
+import LoadAuth0 from "./LoadAuth0";
+import { createRoot } from "react-dom/client";
 
-ReactDOM.render(
-  <>
+const root = createRoot(document.getElementById("root"));
+
+root.render(
+  <Auth0Provider
+    domain={process.env.REACT_APP_DOMAIN}
+    clientId={process.env.REACT_APP_CLIENT_ID}
+    authorizationParams={{
+      redirect_uri: window.location.origin,
+      scope:
+        "openid profile email scope: read:current_user update:current_user_metadata",
+    }}
+  >
     <NavBar />
-    <Loading />
-  </>,
-  document.getElementById("root")
+    <LoadAuth0 />
+  </Auth0Provider>
 );
-
-const auth0Options: Auth0ClientOptions = {
-  domain: process.env.REACT_APP_DOMAIN!,
-  clientId: process.env.REACT_APP_CLIENT_ID!,
-  // @ts-ignore
-  redirect_uri: window.location.origin,
-};
-
-createAuth0Client(auth0Options).then(async (auth0) => {
-  let user = await getUser(auth0);
-
-  if (!user) {
-    try {
-      await auth0.handleRedirectCallback();
-      user = await getUser(auth0);
-    } catch (error) {
-      ReactDOM.render(<Login auth0={auth0} />, document.getElementById("root"));
-      return;
-    }
-  }
-
-  if (user)
-    ReactDOM.render(
-      <App auth0={auth0} user={user} />,
-      document.getElementById("root")
-    );
-});
-
-async function getUser(auth0: Auth0Client) {
-  try {
-    const accessToken = await auth0.getTokenSilently();
-    const user = await auth0.getUser();
-    return { ...user, accessToken };
-  } catch (error) {
-    console.log(error);
-    return;
-  }
-}

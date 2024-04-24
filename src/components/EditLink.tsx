@@ -1,18 +1,18 @@
-import { User } from "@auth0/auth0-spa-js";
+import { useAuth0 } from "@auth0/auth0-react";
 import fetch from "cross-fetch";
 import { useRef } from "react";
 
 function EditLink({
-  user,
   checkLinks,
   setDisplay,
   link,
 }: {
-  user: User;
   checkLinks: Function;
   setDisplay: Function;
   link: Link;
 }) {
+  const { user, getAccessTokenSilently } = useAuth0();
+
   const NameRef = useRef() as { current: HTMLInputElement };
   const WeppageURLRef = useRef() as { current: HTMLInputElement };
   const ImageRef = useRef() as { current: HTMLInputElement };
@@ -61,10 +61,11 @@ function EditLink({
       id: link.id,
     };
 
+    const accessToken = await getAccessTokenSilently();
     fetch(`https://${process.env.REACT_APP_URL_SERVER}/editLink`, {
       method: "POST",
       headers: {
-        Authorization: `bearer ${user.accessToken}`,
+        Authorization: `bearer ${accessToken}`,
         "content-type": "application/json",
       },
       body: JSON.stringify({ user, link: data }),

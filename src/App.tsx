@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Auth0Client, User } from "@auth0/auth0-spa-js";
-import NavBar from "./components/static/NavBar";
+import { useAuth0 } from "@auth0/auth0-react";
 import fetch from "cross-fetch";
 import Loading from "./components/static/Loading";
 import AddLink from "./components/AddLink";
 import EditLink from "./components/EditLink";
+import Login from "./components/static/Login";
 
-function App({ auth0, user }: { auth0: Auth0Client; user: User }) {
+function App() {
+  const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
+  if (!isAuthenticated) return <Login />;
+
   const [links, setLinks] = useState([] as Link[]);
   const [pendingClick, setPendingClick] = useState(0);
   const [hover, setHover] = useState() as any;
@@ -14,11 +17,13 @@ function App({ auth0, user }: { auth0: Auth0Client; user: User }) {
   const [DisplayEditLink, setDisplayEditLink] = useState(
     <div style={{ display: "none" }}></div>
   );
-  function checkLinks() {
+
+  async function checkLinks() {
+    const accessToken = await getAccessTokenSilently();
     fetch(`https://${process.env.REACT_APP_URL_SERVER}/getLinks`, {
       method: "POST",
       headers: {
-        Authorization: `bearer ${user.accessToken}`,
+        Authorization: `bearer ${accessToken}`,
         "content-type": "application/json",
       },
       body: JSON.stringify({ user }),
@@ -75,7 +80,6 @@ function App({ auth0, user }: { auth0: Auth0Client; user: User }) {
         if (!link) return;
         setDisplayEditLink(
           <EditLink
-            user={user}
             link={link}
             setDisplay={setDisplayEditLink}
             checkLinks={checkLinks}
@@ -108,9 +112,6 @@ function App({ auth0, user }: { auth0: Auth0Client; user: User }) {
 
   return (
     <>
-      <div>
-        <NavBar auth0={auth0} user={user} />
-      </div>
       <div className="links">
         <div className="link noRedirect" id="addLink">
           <img
@@ -138,11 +139,7 @@ function App({ auth0, user }: { auth0: Auth0Client; user: User }) {
         )}
       </div>
       <div style={{ display: DisplayAddLink ? "block" : "none" }}>
-        <AddLink
-          user={user}
-          checkLinks={checkLinks}
-          setDisplay={setDisplayAddLink}
-        />
+        <AddLink checkLinks={checkLinks} setDisplay={setDisplayAddLink} />
       </div>
       <div style={{ display: DisplayEditLink ? "block" : "none" }}>
         {DisplayEditLink}

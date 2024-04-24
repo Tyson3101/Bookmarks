@@ -1,16 +1,17 @@
-import { Auth0Client } from "@auth0/auth0-spa-js";
+import { useAuth0 } from "@auth0/auth0-react";
 import React from "react";
 import NavBar from "./NavBar";
 
-function Login({ auth0 }: { auth0: Auth0Client }) {
+function Login() {
+  const { loginWithRedirect } = useAuth0();
+
   return (
     <>
-      <NavBar />
       <div className="loginContainer">
         <div className="login">
           <h1>Log in</h1>
           <span>Log in to access your bookmarks</span>
-          <button onClick={() => auth0.loginWithRedirect()}>Log in</button>
+          <button onClick={() => loginWithRedirect()}>Log in</button>
         </div>
       </div>
     </>
